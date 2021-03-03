@@ -25,7 +25,7 @@ CONTENT_ARCHIVE_VERSION = 1                                 # Increment this whe
 # TODO Add GOOGLE API key here. Will need access to Youtube API v3
 GOOGLE_API_KEY = os.getenv(GOOGLE_API_KEY)
 CHICKEN_N_CHIPS_CHANNEL_ID = 'UCIGQCJIF4fdTrqxnvcwTYxg'
-
+SKIP_VIDEOS_ID = ['UswNAuT5i-s']
 
 # The chef subclass
 ################################################################################
@@ -126,6 +126,8 @@ def get_video_ids(channel_id):
 
         uploads_playlist = youtube.playlistItems().list(playlistId=uploads_id, part='snippet', maxResults = 50, pageToken = next_page_token).execute()
         for element in uploads_playlist['items']:
+            if element['snippet']['resourceId']['videoId'] in SKIP_VIDEOS_ID:
+                continue
             video_ids.append(element['snippet']['resourceId']['videoId'])
         
         next_page_token = uploads_playlist.get('nextPageToken')
